@@ -121,10 +121,26 @@ proc tightcalc
     basis=aug-cc-pVDZ
     {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,6103.3; save,6206.3}
     IF(STATUS.EQ.1) THEN
-        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,6206.3; save,6006.3}
-        SCF_E(7)=ENERGY(1)
+        ANION_E_ROUNDABOUT=ENERGY(1)
     ELSE
+        ANION_E_ROUNDABOUT=123456.7
+    ENDIF
+    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,6003.3; save,6113.3}
+    IF(STATUS.EQ.1) THEN
+        ANION_E_SHORTCUT=ENERGY(1)
+    ELSE
+        ANION_E_SHORTCUT=123456.7
+    ENDIF
+    IF(MIN(ANION_E_SHORTCUT, ANION_E_ROUNDABOUT).GE.0.0) THEN
         SCF_E(7)=123456.7
+    ELSE
+        IF(ANION_E_SHORTCUT.LE.ANION_E_ROUNDABOUT) THEN
+            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,6113.3; save,6006.3}
+            SCF_E(7)=ANION_E_SHORTCUT
+        ELSE
+            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,6206.3; save,6006.3}
+            SCF_E(7)=ANION_E_ROUNDABOUT
+        ENDIF
     ENDIF
 
     SCF_E_NAME(8)='PBE_VDZ_E'
