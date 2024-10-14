@@ -54,15 +54,22 @@ proc manyhf
     basis=MINAO
     SCF_GUESS_IDX=2
     {rks,PBE0,ACCU=1.d-18,energy=1.d-10,maxiter=150,nitord=148; start,atden; save,1.3+$SCF_GUESS_WF_REC(SCF_GUESS_IDX);NOENEST}
+    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=150,nitord=148; start,1.3+$SCF_GUESS_WF_REC(SCF_GUESS_IDX); save,1.3+$SCF_GUESS_WF_REC(SCF_GUESS_IDX);NOENEST}
 
     SCF_GUESS_IDX=3
     {rks,PBE,ACCU=1.d-18,energy=1.d-10,maxiter=150,nitord=148; start,atden; save,1.3+$SCF_GUESS_WF_REC(SCF_GUESS_IDX);NOENEST}
 
+    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=150,nitord=148; start,1.3+$SCF_GUESS_WF_REC(SCF_GUESS_IDX); save,1.3+$SCF_GUESS_WF_REC(SCF_GUESS_IDX);NOENEST}
+
     SCF_GUESS_IDX=4
     {rks,PBE,ACCU=1.d-18,energy=1.d-10,maxiter=150,nitord=148; start,atden; save,1.3+$SCF_GUESS_WF_REC(SCF_GUESS_IDX); rotate,13.1,14.1;NOENEST}
 
+    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=150,nitord=148; start,1.3+$SCF_GUESS_WF_REC(SCF_GUESS_IDX); save,1.3+$SCF_GUESS_WF_REC(SCF_GUESS_IDX);NOENEST}
+
     SCF_GUESS_IDX=6
     {rks,PBE0,ACCU=1.d-18,energy=1.d-10,maxiter=150,nitord=148; start,atden; save,1.3+$SCF_GUESS_WF_REC(SCF_GUESS_IDX); rotate,13.1,14.1;NOENEST}
+
+    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=150,nitord=148; start,1.3+$SCF_GUESS_WF_REC(SCF_GUESS_IDX); save,1.3+$SCF_GUESS_WF_REC(SCF_GUESS_IDX);NOENEST}
 
     SCF_GUESS_IDX=7
     set,charge=-1
