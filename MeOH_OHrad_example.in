@@ -75,9 +75,12 @@ proc tightcalc
         basis=MINAO
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9003.3; save,9103.3}
         basis=aug-cc-pVDZ
-        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9103.3; save,9206.3}
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9103.3; save,9206.3}
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9206.3; save,9306.3}
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9306.3; save,9406.3}
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=250,nitord=248; ipol,'DIIS',120,1,30; start,9406.3; save,9506.3}
         IF(STATUS.EQ.1) THEN
-            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9206.3; save,9006.3}
+            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=100,nitord=198; start,9506.3; save,9006.3}
             PBE_MINAO_E=ENERGY(1)
         ELSE
             PBE_MINAO_E=123456.7
