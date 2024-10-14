@@ -50,17 +50,20 @@ proc tightcalc
     {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9002.3; save,9105.3}
     IF(STATUS.EQ.1) THEN
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9105.3; save,9005.3}
-        PBE0_VDZ_E=ENERGY(1)
+        PBE0_MINAO_E=ENERGY(1)
     ELSE
         basis=MINAO
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9002.3; save,9102.3}
         basis=aug-cc-pVDZ
-        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9102.3; save,9205.3}
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9102.3; save,9205.3}
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9205.3; save,9305.3}
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9305.3; save,9405.3}
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=250,nitord=248; ipol,'DIIS',120,1,30; start,9405.3; save,9505.3}
         IF(STATUS.EQ.1) THEN
-            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9205.3; save,9005.3}
-            PBE0_VDZ_E=ENERGY(1)
+            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9505.3; save,9005.3}
+            PBE0_MINAO_E=ENERGY(1)
         ELSE
-            PBE0_VDZ_E=123456.7
+            PBE0_MINAO_E=123456.7
         ENDIF
     ENDIF
 
@@ -80,7 +83,7 @@ proc tightcalc
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9306.3; save,9406.3}
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=250,nitord=248; ipol,'DIIS',120,1,30; start,9406.3; save,9506.3}
         IF(STATUS.EQ.1) THEN
-            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=100,nitord=198; start,9506.3; save,9006.3}
+            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9506.3; save,9006.3}
             PBE_MINAO_E=ENERGY(1)
         ELSE
             PBE_MINAO_E=123456.7
@@ -104,7 +107,7 @@ proc tightcalc
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,8306.3; save,8406.3}
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=250,nitord=248; ipol,'DIIS',120,1,30; start,8406.3; save,8506.3}
         IF(STATUS.EQ.1) THEN
-            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=100,nitord=198; start,8506.3; save,8006.3}
+            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,8506.3; save,8006.3}
             PBE_MINAO_ROT_E=ENERGY(1)
         ELSE
             PBE_MINAO_ROT_E=123456.7
@@ -146,39 +149,39 @@ proc tightcalc
         ENDIF
     ENDIF
 
-    show,PBE_VDZ_E,PBE0_VDZ_E,PBE_MINAO_E,PBE_MINAO_ROT_E,PBE_VDZ_UHF_E,PBE0_MINAO_ROT_E
+    show,PBE_VDZ_E,PBE0_MINAO_E,PBE_MINAO_E,PBE_MINAO_ROT_E,PBE_VDZ_UHF_E,PBE0_MINAO_ROT_E
 
-    IF( MIN(PBE_VDZ_E,PBE0_VDZ_E,PBE_MINAO_E,PBE_MINAO_ROT_E,PBE_VDZ_UHF_E,PBE0_MINAO_ROT_E).GT.0.0 )THEN
+    IF( MIN(PBE_VDZ_E,PBE0_MINAO_E,PBE_MINAO_E,PBE_MINAO_ROT_E,PBE_VDZ_UHF_E,PBE0_MINAO_ROT_E).GT.0.0 )THEN
         TEXT,Could not find a way to converge SCF, aborting
         STOP
     ENDIF
 
-    IF( (PBE_VDZ_E.LE.PBE0_VDZ_E).AND.(PBE_VDZ_E.LE.PBE_MINAO_E).AND.(PBE_VDZ_E.LE.PBE_MINAO_ROT_E).AND.(PBE_VDZ_E.LE.PBE_VDZ_UHF_E).AND.(PBE_VDZ_E.LE.PBE0_MINAO_ROT_E) )THEN
+    IF( (PBE_VDZ_E.LE.PBE0_MINAO_E).AND.(PBE_VDZ_E.LE.PBE_MINAO_E).AND.(PBE_VDZ_E.LE.PBE_MINAO_ROT_E).AND.(PBE_VDZ_E.LE.PBE_VDZ_UHF_E).AND.(PBE_VDZ_E.LE.PBE0_MINAO_ROT_E) )THEN
         !if PBE_VDZ_E is smaller than the all of the other four, then it is the minimum
         TEXT,Using PBE_VDZ_E
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9004.3}
     ELSE
-        IF( (PBE0_VDZ_E.LE.PBE_VDZ_E).AND.(PBE0_VDZ_E.LE.PBE_MINAO_E).AND.(PBE0_VDZ_E.LE.PBE_MINAO_ROT_E).AND.(PBE0_VDZ_E.LE.PBE_VDZ_UHF_E).AND.(PBE0_VDZ_E.LE.PBE0_MINAO_ROT_E) )THEN
-            !if PBE0_VDZ_E is smaller than the all of the other four, then it is the minimum
-            TEXT,Using PBE0_VDZ_E
+        IF( (PBE0_MINAO_E.LE.PBE_VDZ_E).AND.(PBE0_MINAO_E.LE.PBE_MINAO_E).AND.(PBE0_MINAO_E.LE.PBE_MINAO_ROT_E).AND.(PBE0_MINAO_E.LE.PBE_VDZ_UHF_E).AND.(PBE0_MINAO_E.LE.PBE0_MINAO_ROT_E) )THEN
+            !if PBE0_MINAO_E is smaller than the all of the other four, then it is the minimum
+            TEXT,Using PBE0_MINAO_E
             {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9005.3}
         ELSE
-            IF( (PBE_MINAO_E.LE.PBE_VDZ_E).AND.(PBE_MINAO_E.LE.PBE0_VDZ_E).AND.(PBE_MINAO_E.LE.PBE_MINAO_ROT_E).AND.(PBE_MINAO_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_E.LE.PBE0_MINAO_ROT_E) )THEN
+            IF( (PBE_MINAO_E.LE.PBE_VDZ_E).AND.(PBE_MINAO_E.LE.PBE0_MINAO_E).AND.(PBE_MINAO_E.LE.PBE_MINAO_ROT_E).AND.(PBE_MINAO_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_E.LE.PBE0_MINAO_ROT_E) )THEN
                 !if PBE_MINAO_E is smaller than the all of the other four, then it is the minimum
                 TEXT,Using PBE_MINAO_E
                 {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9006.3}
             ELSE
-                IF( (PBE_MINAO_ROT_E.LE.PBE_VDZ_E).AND.(PBE_MINAO_ROT_E.LE.PBE0_VDZ_E).AND.(PBE_MINAO_ROT_E.LE.PBE_MINAO_E).AND.(PBE_MINAO_ROT_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_ROT_E.LE.PBE0_MINAO_ROT_E) )THEN
+                IF( (PBE_MINAO_ROT_E.LE.PBE_VDZ_E).AND.(PBE_MINAO_ROT_E.LE.PBE0_MINAO_E).AND.(PBE_MINAO_ROT_E.LE.PBE_MINAO_E).AND.(PBE_MINAO_ROT_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_ROT_E.LE.PBE0_MINAO_ROT_E) )THEN
                     !if PBE_MINAO_ROT_E is smaller than the all of the other four, then it is the minimum
                     TEXT,Using PBE_MINAO_ROT_E
                     {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,8006.3}
                 ELSE
-                    IF( (PBE_VDZ_UHF_E.LE.PBE_VDZ_E).AND.(PBE_VDZ_UHF_E.LE.PBE0_VDZ_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_ROT_E).AND.(PBE_VDZ_UHF_E.LE.PBE0_MINAO_ROT_E) )THEN
+                    IF( (PBE_VDZ_UHF_E.LE.PBE_VDZ_E).AND.(PBE_VDZ_UHF_E.LE.PBE0_MINAO_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_ROT_E).AND.(PBE_VDZ_UHF_E.LE.PBE0_MINAO_ROT_E) )THEN
                         !if PBE_VDZ_UHF_E is smaller than the all of the other four, then it is the minimum
                         TEXT,Using PBE_VDZ_UHF_E
                         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,7004.3}
                     ELSE
-                        IF( (PBE0_MINAO_ROT_E.LE.PBE_VDZ_E).AND.(PBE0_MINAO_ROT_E.LE.PBE0_VDZ_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_ROT_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_VDZ_UHF_E) )THEN
+                        IF( (PBE0_MINAO_ROT_E.LE.PBE_VDZ_E).AND.(PBE0_MINAO_ROT_E.LE.PBE0_MINAO_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_ROT_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_VDZ_UHF_E) )THEN
                             !if PBE0_MINAO_ROT_E is smaller than the all of the other four, then it is the minimum
                             TEXT,Using PBE0_MINAO_ROT_E
                             {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,8016.3}
@@ -195,7 +198,7 @@ proc tightcalc
 
     {RCCSD;THRESH,ENERGY=1.d-10,COEFF=5.d-7;maxit,100}
 
-    put,xyz,pesrecalc169.xyz,new  
+    put,xyz,pesrecalc171.xyz,new  
 endproc
 
 tightcalc  
