@@ -149,46 +149,74 @@ proc tightcalc
         ENDIF
     ENDIF
 
-    show,PBE_VDZ_E,PBE0_MINAO_E,PBE_MINAO_E,PBE_MINAO_ROT_E,PBE_VDZ_UHF_E,PBE0_MINAO_ROT_E
+    basis=MINAO
+    set,charge=-1
+    {ks,PBE,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,atden; save,6003.3}
+    basis=aug-cc-pVDZ
+    set,charge=0
+    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,6003.3; save,6106.3}
+    IF(STATUS.EQ.1) THEN
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,6106.3; save,6006.3}
+        PBE_MINAO_ANION_E=ENERGY(1)
+    ELSE
+        basis=MINAO
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,6003.3; save,6103.3}
+        basis=aug-cc-pVDZ
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,6103.3; save,6206.3}
+        IF(STATUS.EQ.1) THEN
+            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,6206.3; save,6006.3}
+            PBE_MINAO_ANION_E=ENERGY(1)
+        ELSE
+            PBE_MINAO_ANION_E=123456.7
+        ENDIF
+    ENDIF
 
-    IF( MIN(PBE_VDZ_E,PBE0_MINAO_E,PBE_MINAO_E,PBE_MINAO_ROT_E,PBE_VDZ_UHF_E,PBE0_MINAO_ROT_E).GT.0.0 )THEN
+    show, PBE_VDZ_E, PBE0_MINAO_E, PBE_MINAO_E, PBE_MINAO_ROT_E, PBE_VDZ_UHF_E, PBE0_MINAO_ROT_E, PBE_MINAO_ANION_E
+
+    IF( MIN(PBE_VDZ_E, PBE0_MINAO_E, PBE_MINAO_E, PBE_MINAO_ROT_E, PBE_VDZ_UHF_E, PBE0_MINAO_ROT_E, PBE_MINAO_ANION_E).GT.0.0 )THEN
         TEXT,Could not find a way to converge SCF, aborting
         STOP
     ENDIF
 
-    IF( (PBE_VDZ_E.LE.PBE0_MINAO_E).AND.(PBE_VDZ_E.LE.PBE_MINAO_E).AND.(PBE_VDZ_E.LE.PBE_MINAO_ROT_E).AND.(PBE_VDZ_E.LE.PBE_VDZ_UHF_E).AND.(PBE_VDZ_E.LE.PBE0_MINAO_ROT_E) )THEN
-        !if PBE_VDZ_E is smaller than the all of the other four, then it is the minimum
+    IF( (PBE_VDZ_E.LE.PBE0_MINAO_E).AND.(PBE_VDZ_E.LE.PBE_MINAO_E).AND.(PBE_VDZ_E.LE.PBE_MINAO_ROT_E).AND.(PBE_VDZ_E.LE.PBE_VDZ_UHF_E).AND.(PBE_VDZ_E.LE.PBE0_MINAO_ROT_E).AND.(PBE_VDZ_E.LE.PBE_MINAO_ANION_E) )THEN
+        !if PBE_VDZ_E is smaller than the all of the other six, then it is the minimum
         TEXT,Using PBE_VDZ_E
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9004.3}
     ELSE
-        IF( (PBE0_MINAO_E.LE.PBE_VDZ_E).AND.(PBE0_MINAO_E.LE.PBE_MINAO_E).AND.(PBE0_MINAO_E.LE.PBE_MINAO_ROT_E).AND.(PBE0_MINAO_E.LE.PBE_VDZ_UHF_E).AND.(PBE0_MINAO_E.LE.PBE0_MINAO_ROT_E) )THEN
-            !if PBE0_MINAO_E is smaller than the all of the other four, then it is the minimum
+        IF( (PBE0_MINAO_E.LE.PBE_VDZ_E).AND.(PBE0_MINAO_E.LE.PBE_MINAO_E).AND.(PBE0_MINAO_E.LE.PBE_MINAO_ROT_E).AND.(PBE0_MINAO_E.LE.PBE_VDZ_UHF_E).AND.(PBE0_MINAO_E.LE.PBE0_MINAO_ROT_E).AND.(PBE0_MINAO_E.LE.PBE_MINAO_ANION_E) )THEN
+            !if PBE0_MINAO_E is smaller than the all of the other six, then it is the minimum
             TEXT,Using PBE0_MINAO_E
             {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9005.3}
         ELSE
-            IF( (PBE_MINAO_E.LE.PBE_VDZ_E).AND.(PBE_MINAO_E.LE.PBE0_MINAO_E).AND.(PBE_MINAO_E.LE.PBE_MINAO_ROT_E).AND.(PBE_MINAO_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_E.LE.PBE0_MINAO_ROT_E) )THEN
-                !if PBE_MINAO_E is smaller than the all of the other four, then it is the minimum
+            IF( (PBE_MINAO_E.LE.PBE_VDZ_E).AND.(PBE_MINAO_E.LE.PBE0_MINAO_E).AND.(PBE_MINAO_E.LE.PBE_MINAO_ROT_E).AND.(PBE_MINAO_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_E.LE.PBE0_MINAO_ROT_E).AND.(PBE_MINAO_E.LE.PBE_MINAO_ANION_E) )THEN
+                !if PBE_MINAO_E is smaller than the all of the other six, then it is the minimum
                 TEXT,Using PBE_MINAO_E
                 {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9006.3}
             ELSE
-                IF( (PBE_MINAO_ROT_E.LE.PBE_VDZ_E).AND.(PBE_MINAO_ROT_E.LE.PBE0_MINAO_E).AND.(PBE_MINAO_ROT_E.LE.PBE_MINAO_E).AND.(PBE_MINAO_ROT_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_ROT_E.LE.PBE0_MINAO_ROT_E) )THEN
-                    !if PBE_MINAO_ROT_E is smaller than the all of the other four, then it is the minimum
+                IF( (PBE_MINAO_ROT_E.LE.PBE_VDZ_E).AND.(PBE_MINAO_ROT_E.LE.PBE0_MINAO_E).AND.(PBE_MINAO_ROT_E.LE.PBE_MINAO_E).AND.(PBE_MINAO_ROT_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_ROT_E.LE.PBE0_MINAO_ROT_E).AND.(PBE_MINAO_ROT_E.LE.PBE_MINAO_ANION_E) )THEN
+                    !if PBE_MINAO_ROT_E is smaller than the all of the other six, then it is the minimum
                     TEXT,Using PBE_MINAO_ROT_E
                     {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,8006.3}
                 ELSE
-                    IF( (PBE_VDZ_UHF_E.LE.PBE_VDZ_E).AND.(PBE_VDZ_UHF_E.LE.PBE0_MINAO_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_ROT_E).AND.(PBE_VDZ_UHF_E.LE.PBE0_MINAO_ROT_E) )THEN
-                        !if PBE_VDZ_UHF_E is smaller than the all of the other four, then it is the minimum
+                    IF( (PBE_VDZ_UHF_E.LE.PBE_VDZ_E).AND.(PBE_VDZ_UHF_E.LE.PBE0_MINAO_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_ROT_E).AND.(PBE_VDZ_UHF_E.LE.PBE0_MINAO_ROT_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_ANION_E) )THEN
+                        !if PBE_VDZ_UHF_E is smaller than the all of the other six, then it is the minimum
                         TEXT,Using PBE_VDZ_UHF_E
                         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,7004.3}
                     ELSE
-                        IF( (PBE0_MINAO_ROT_E.LE.PBE_VDZ_E).AND.(PBE0_MINAO_ROT_E.LE.PBE0_MINAO_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_ROT_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_VDZ_UHF_E) )THEN
-                            !if PBE0_MINAO_ROT_E is smaller than the all of the other four, then it is the minimum
+                        IF( (PBE0_MINAO_ROT_E.LE.PBE_VDZ_E).AND.(PBE0_MINAO_ROT_E.LE.PBE0_MINAO_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_ROT_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_VDZ_UHF_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_ANION_E) )THEN
+                            !if PBE0_MINAO_ROT_E is smaller than the all of the other six, then it is the minimum
                             TEXT,Using PBE0_MINAO_ROT_E
                             {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,8016.3}
                         ELSE
-                            !if this is reached, something must have went horribly wrong, abort
-                            TEXT,There is no SCF energy that is smaller than all others, something must have went wrong, aborting
-                            STOP
+                            IF( (PBE_MINAO_ANION_E.LE.PBE_VDZ_E).AND.(PBE_MINAO_ANION_E.LE.PBE0_MINAO_E).AND.(PBE_MINAO_ANION_E.LE.PBE_MINAO_E).AND.(PBE_MINAO_ANION_E.LE.PBE_MINAO_ROT_E).AND.(PBE_MINAO_ANION_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_ANION_E.LE.PBE0_MINAO_ROT_E) )THEN
+                                !if PBE_MINAO_ANION_E is smaller than the all of the other six, then it is the minimum
+                                TEXT,Using PBE_MINAO_ANION_E
+                                {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,6006.3}
+                            ELSE
+                                !if this is reached, something must have went horribly wrong, abort
+                                TEXT,There is no SCF energy that is smaller than all others, something must have went wrong, aborting
+                                STOP
+                            ENDIF
                         ENDIF
                     ENDIF
                 ENDIF
