@@ -24,32 +24,21 @@ C  0.00000000 0.00000000  0.00000000
 }
 
 proc tightcalc
-    basis=cc-pVDZ
-    {rks,PBE,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,atden; save,9001.3}
     basis=aug-cc-pVDZ
-    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9001.3; save,9104.3}
+    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=100,nitord=98; start,atden; save,9001.3}
     IF(STATUS.EQ.1) THEN
-        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9104.3; save,9004.3}
-        PBE_VDZ_E=ENERGY(1)
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9001.3; save,9004.3}
+        ROHF_AVDZ_E=ENERGY(1)
     ELSE
-        basis=cc-pVDZ
-        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9001.3; save,9101.3}
-        basis=aug-cc-pVDZ
-        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9101.3; save,9204.3}
-        IF(STATUS.EQ.1) THEN
-            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9204.3; save,9004.3}
-            PBE_VDZ_E=ENERGY(1)
-        ELSE
-            PBE_VDZ_E=123456.7
-        ENDIF
+        ROHF_AVDZ_E=123456.7
     ENDIF
 
     basis=MINAO
     {rks,PBE0,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,atden; save,9002.3}
     basis=aug-cc-pVDZ
-    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9002.3; save,9105.3}
+    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=100,nitord=98; start,9002.3; save,9105.3}
     IF(STATUS.EQ.1) THEN
-        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9105.3; save,9005.3}
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9105.3; save,9005.3}
         PBE0_MINAO_E=ENERGY(1)
     ELSE
         basis=MINAO
@@ -60,7 +49,7 @@ proc tightcalc
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9305.3; save,9405.3}
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=250,nitord=248; ipol,'DIIS',120,1,30; start,9405.3; save,9505.3}
         IF(STATUS.EQ.1) THEN
-            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9505.3; save,9005.3}
+            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9505.3; save,9005.3}
             PBE0_MINAO_E=ENERGY(1)
         ELSE
             PBE0_MINAO_E=123456.7
@@ -70,9 +59,9 @@ proc tightcalc
     basis=MINAO
     {rks,PBE,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,atden; save,9003.3}
     basis=aug-cc-pVDZ
-    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9003.3; save,9106.3}
+    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=100,nitord=98; start,9003.3; save,9106.3}
     IF(STATUS.EQ.1) THEN
-        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9106.3; save,9006.3}
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9106.3; save,9006.3}
         PBE_MINAO_E=ENERGY(1)
     ELSE
         basis=MINAO
@@ -83,7 +72,7 @@ proc tightcalc
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9306.3; save,9406.3}
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=250,nitord=248; ipol,'DIIS',120,1,30; start,9406.3; save,9506.3}
         IF(STATUS.EQ.1) THEN
-            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9506.3; save,9006.3}
+            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9506.3; save,9006.3}
             PBE_MINAO_E=ENERGY(1)
         ELSE
             PBE_MINAO_E=123456.7
@@ -94,9 +83,9 @@ proc tightcalc
     ! swap HOMO with HOMO-1 in the guess, in this case this means swapping the singly occupied orbital with the highest doubly occupied orbital
     {rks,PBE,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,atden; save,8003.3; rotate,13.1,14.1}
     basis=aug-cc-pVDZ
-    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,8003.3; save,8106.3}
+    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=100,nitord=98; start,8003.3; save,8106.3}
     IF(STATUS.EQ.1) THEN
-        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,8106.3; save,8006.3}
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,8106.3; save,8006.3}
         PBE_MINAO_ROT_E=ENERGY(1)
     ELSE
         basis=MINAO
@@ -107,7 +96,7 @@ proc tightcalc
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,8306.3; save,8406.3}
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=250,nitord=248; ipol,'DIIS',120,1,30; start,8406.3; save,8506.3}
         IF(STATUS.EQ.1) THEN
-            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,8506.3; save,8006.3}
+            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,8506.3; save,8006.3}
             PBE_MINAO_ROT_E=ENERGY(1)
         ELSE
             PBE_MINAO_ROT_E=123456.7
@@ -122,7 +111,7 @@ proc tightcalc
     {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=250,nitord=248; start,7104.3; save,7105.3}
     {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=250,nitord=248; start,7105.3; save,7106.3}
     IF(STATUS.EQ.1) THEN
-        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=250,nitord=248; start,7106.3; save,7004.3}
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,7106.3; save,7004.3}
         PBE_VDZ_UHF_E=ENERGY(1)
     ELSE
         PBE_VDZ_UHF_E=123456.7
@@ -132,9 +121,9 @@ proc tightcalc
     ! swap HOMO with HOMO-1 in the guess, in this case this means swapping the singly occupied orbital with the highest doubly occupied orbital
     {rks,PBE0,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,atden; save,8013.3; rotate,13.1,14.1}
     basis=aug-cc-pVDZ
-    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,8013.3; save,8116.3}
+    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=100,nitord=98; start,8013.3; save,8116.3}
     IF(STATUS.EQ.1) THEN
-        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,8116.3; save,8016.3}
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,8116.3; save,8016.3}
         PBE0_MINAO_ROT_E=ENERGY(1)
     ELSE
         basis=MINAO
@@ -142,7 +131,7 @@ proc tightcalc
         basis=aug-cc-pVDZ
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,8113.3; save,8216.3}
         IF(STATUS.EQ.1) THEN
-            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,8216.3; save,8016.3}
+            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,8216.3; save,8016.3}
             PBE0_MINAO_ROT_E=ENERGY(1)
         ELSE
             PBE0_MINAO_ROT_E=123456.7
@@ -154,9 +143,9 @@ proc tightcalc
     {ks,PBE,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,atden; save,6003.3}
     basis=aug-cc-pVDZ
     set,charge=0
-    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,6003.3; save,6106.3}
+    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=100,nitord=98; start,6003.3; save,6106.3}
     IF(STATUS.EQ.1) THEN
-        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,6106.3; save,6006.3}
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,6106.3; save,6006.3}
         PBE_MINAO_ANION_E=ENERGY(1)
     ELSE
         basis=MINAO
@@ -164,54 +153,54 @@ proc tightcalc
         basis=aug-cc-pVDZ
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,6103.3; save,6206.3}
         IF(STATUS.EQ.1) THEN
-            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,6206.3; save,6006.3}
+            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,6206.3; save,6006.3}
             PBE_MINAO_ANION_E=ENERGY(1)
         ELSE
             PBE_MINAO_ANION_E=123456.7
         ENDIF
     ENDIF
 
-    show, PBE_VDZ_E, PBE0_MINAO_E, PBE_MINAO_E, PBE_MINAO_ROT_E, PBE_VDZ_UHF_E, PBE0_MINAO_ROT_E, PBE_MINAO_ANION_E
+    show, ROHF_AVDZ_E, PBE0_MINAO_E, PBE_MINAO_E, PBE_MINAO_ROT_E, PBE_VDZ_UHF_E, PBE0_MINAO_ROT_E, PBE_MINAO_ANION_E
 
-    IF( MIN(PBE_VDZ_E, PBE0_MINAO_E, PBE_MINAO_E, PBE_MINAO_ROT_E, PBE_VDZ_UHF_E, PBE0_MINAO_ROT_E, PBE_MINAO_ANION_E).GT.0.0 )THEN
+    IF( MIN(ROHF_AVDZ_E, PBE0_MINAO_E, PBE_MINAO_E, PBE_MINAO_ROT_E, PBE_VDZ_UHF_E, PBE0_MINAO_ROT_E, PBE_MINAO_ANION_E).GT.0.0 )THEN
         TEXT,Could not find a way to converge SCF, aborting
         STOP
     ENDIF
 
-    IF( (PBE_VDZ_E.LE.PBE0_MINAO_E).AND.(PBE_VDZ_E.LE.PBE_MINAO_E).AND.(PBE_VDZ_E.LE.PBE_MINAO_ROT_E).AND.(PBE_VDZ_E.LE.PBE_VDZ_UHF_E).AND.(PBE_VDZ_E.LE.PBE0_MINAO_ROT_E).AND.(PBE_VDZ_E.LE.PBE_MINAO_ANION_E) )THEN
-        !if PBE_VDZ_E is smaller than the all of the other six, then it is the minimum
-        TEXT,Using PBE_VDZ_E
-        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9004.3}
+    IF( (ROHF_AVDZ_E.LE.PBE0_MINAO_E).AND.(ROHF_AVDZ_E.LE.PBE_MINAO_E).AND.(ROHF_AVDZ_E.LE.PBE_MINAO_ROT_E).AND.(ROHF_AVDZ_E.LE.PBE_VDZ_UHF_E).AND.(ROHF_AVDZ_E.LE.PBE0_MINAO_ROT_E).AND.(ROHF_AVDZ_E.LE.PBE_MINAO_ANION_E) )THEN
+        !if ROHF_AVDZ_E is smaller than the all of the other six, then it is the minimum
+        TEXT,Using ROHF_AVDZ_E
+        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9004.3}
     ELSE
-        IF( (PBE0_MINAO_E.LE.PBE_VDZ_E).AND.(PBE0_MINAO_E.LE.PBE_MINAO_E).AND.(PBE0_MINAO_E.LE.PBE_MINAO_ROT_E).AND.(PBE0_MINAO_E.LE.PBE_VDZ_UHF_E).AND.(PBE0_MINAO_E.LE.PBE0_MINAO_ROT_E).AND.(PBE0_MINAO_E.LE.PBE_MINAO_ANION_E) )THEN
+        IF( (PBE0_MINAO_E.LE.ROHF_AVDZ_E).AND.(PBE0_MINAO_E.LE.PBE_MINAO_E).AND.(PBE0_MINAO_E.LE.PBE_MINAO_ROT_E).AND.(PBE0_MINAO_E.LE.PBE_VDZ_UHF_E).AND.(PBE0_MINAO_E.LE.PBE0_MINAO_ROT_E).AND.(PBE0_MINAO_E.LE.PBE_MINAO_ANION_E) )THEN
             !if PBE0_MINAO_E is smaller than the all of the other six, then it is the minimum
             TEXT,Using PBE0_MINAO_E
-            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9005.3}
+            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9005.3}
         ELSE
-            IF( (PBE_MINAO_E.LE.PBE_VDZ_E).AND.(PBE_MINAO_E.LE.PBE0_MINAO_E).AND.(PBE_MINAO_E.LE.PBE_MINAO_ROT_E).AND.(PBE_MINAO_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_E.LE.PBE0_MINAO_ROT_E).AND.(PBE_MINAO_E.LE.PBE_MINAO_ANION_E) )THEN
+            IF( (PBE_MINAO_E.LE.ROHF_AVDZ_E).AND.(PBE_MINAO_E.LE.PBE0_MINAO_E).AND.(PBE_MINAO_E.LE.PBE_MINAO_ROT_E).AND.(PBE_MINAO_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_E.LE.PBE0_MINAO_ROT_E).AND.(PBE_MINAO_E.LE.PBE_MINAO_ANION_E) )THEN
                 !if PBE_MINAO_E is smaller than the all of the other six, then it is the minimum
                 TEXT,Using PBE_MINAO_E
-                {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9006.3}
+                {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,9006.3}
             ELSE
-                IF( (PBE_MINAO_ROT_E.LE.PBE_VDZ_E).AND.(PBE_MINAO_ROT_E.LE.PBE0_MINAO_E).AND.(PBE_MINAO_ROT_E.LE.PBE_MINAO_E).AND.(PBE_MINAO_ROT_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_ROT_E.LE.PBE0_MINAO_ROT_E).AND.(PBE_MINAO_ROT_E.LE.PBE_MINAO_ANION_E) )THEN
+                IF( (PBE_MINAO_ROT_E.LE.ROHF_AVDZ_E).AND.(PBE_MINAO_ROT_E.LE.PBE0_MINAO_E).AND.(PBE_MINAO_ROT_E.LE.PBE_MINAO_E).AND.(PBE_MINAO_ROT_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_ROT_E.LE.PBE0_MINAO_ROT_E).AND.(PBE_MINAO_ROT_E.LE.PBE_MINAO_ANION_E) )THEN
                     !if PBE_MINAO_ROT_E is smaller than the all of the other six, then it is the minimum
                     TEXT,Using PBE_MINAO_ROT_E
-                    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,8006.3}
+                    {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,8006.3}
                 ELSE
-                    IF( (PBE_VDZ_UHF_E.LE.PBE_VDZ_E).AND.(PBE_VDZ_UHF_E.LE.PBE0_MINAO_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_ROT_E).AND.(PBE_VDZ_UHF_E.LE.PBE0_MINAO_ROT_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_ANION_E) )THEN
+                    IF( (PBE_VDZ_UHF_E.LE.ROHF_AVDZ_E).AND.(PBE_VDZ_UHF_E.LE.PBE0_MINAO_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_ROT_E).AND.(PBE_VDZ_UHF_E.LE.PBE0_MINAO_ROT_E).AND.(PBE_VDZ_UHF_E.LE.PBE_MINAO_ANION_E) )THEN
                         !if PBE_VDZ_UHF_E is smaller than the all of the other six, then it is the minimum
                         TEXT,Using PBE_VDZ_UHF_E
-                        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,7004.3}
+                        {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,7004.3}
                     ELSE
-                        IF( (PBE0_MINAO_ROT_E.LE.PBE_VDZ_E).AND.(PBE0_MINAO_ROT_E.LE.PBE0_MINAO_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_ROT_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_VDZ_UHF_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_ANION_E) )THEN
+                        IF( (PBE0_MINAO_ROT_E.LE.ROHF_AVDZ_E).AND.(PBE0_MINAO_ROT_E.LE.PBE0_MINAO_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_ROT_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_VDZ_UHF_E).AND.(PBE0_MINAO_ROT_E.LE.PBE_MINAO_ANION_E) )THEN
                             !if PBE0_MINAO_ROT_E is smaller than the all of the other six, then it is the minimum
                             TEXT,Using PBE0_MINAO_ROT_E
-                            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,8016.3}
+                            {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,8016.3}
                         ELSE
-                            IF( (PBE_MINAO_ANION_E.LE.PBE_VDZ_E).AND.(PBE_MINAO_ANION_E.LE.PBE0_MINAO_E).AND.(PBE_MINAO_ANION_E.LE.PBE_MINAO_E).AND.(PBE_MINAO_ANION_E.LE.PBE_MINAO_ROT_E).AND.(PBE_MINAO_ANION_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_ANION_E.LE.PBE0_MINAO_ROT_E) )THEN
+                            IF( (PBE_MINAO_ANION_E.LE.ROHF_AVDZ_E).AND.(PBE_MINAO_ANION_E.LE.PBE0_MINAO_E).AND.(PBE_MINAO_ANION_E.LE.PBE_MINAO_E).AND.(PBE_MINAO_ANION_E.LE.PBE_MINAO_ROT_E).AND.(PBE_MINAO_ANION_E.LE.PBE_VDZ_UHF_E).AND.(PBE_MINAO_ANION_E.LE.PBE0_MINAO_ROT_E) )THEN
                                 !if PBE_MINAO_ANION_E is smaller than the all of the other six, then it is the minimum
                                 TEXT,Using PBE_MINAO_ANION_E
-                                {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,6006.3}
+                                {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=50,nitord=48; start,6006.3}
                             ELSE
                                 !if this is reached, something must have went horribly wrong, abort
                                 TEXT,There is no SCF energy that is smaller than all others, something must have went wrong, aborting
