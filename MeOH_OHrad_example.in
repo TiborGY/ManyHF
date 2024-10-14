@@ -44,7 +44,7 @@ proc tightcalc
         ENDIF
     ENDIF
 
-    basis=cc-pVDZ
+    basis=MINAO
     {rks,PBE0,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,atden; save,9002.3}
     basis=aug-cc-pVDZ
     {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9002.3; save,9105.3}
@@ -52,7 +52,7 @@ proc tightcalc
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9105.3; save,9005.3}
         PBE0_VDZ_E=ENERGY(1)
     ELSE
-        basis=cc-pVDZ
+        basis=MINAO
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9002.3; save,9102.3}
         basis=aug-cc-pVDZ
         {rhf,ACCU=1.d-18,energy=1.d-10,maxiter=200,nitord=198; start,9102.3; save,9205.3}
@@ -195,7 +195,7 @@ proc tightcalc
 
     {RCCSD;THRESH,ENERGY=1.d-10,COEFF=5.d-7;maxit,100}
 
-    put,xyz,pesrecalc171.xyz,new  
+    put,xyz,pesrecalc169.xyz,new  
 endproc
 
 tightcalc  
